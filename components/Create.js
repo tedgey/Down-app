@@ -11,25 +11,41 @@ import {
 
 class Feed extends Component {
   state = {
-    event: ""
+    event: "",
+    date_time: ""
   };
 
-  // takes us to the Feed screen
+  // takes us to the Feed screen **TODO** make onPress submit both event name and date/time to event table
   onPress = () => {
     this.props.navigation.navigate("Feed", { name: this.state.name });
   };
 
-  onChangeText = event => this.setState({ event });
+  onChangeTextEvent = event => this.setState({ event });
+  onChangeTextDateTime = date_time => this.setState({ date_time });
+
+  // this loads the list of events
+  loadData = async () => {
+    const url = "http://10.150.11.211:3000/v1/groups";
+    const response = await fetch(url);
+    const data = response.json();
+    return data;
+  };
 
   render() {
     return (
       <View>
         <Text style={styles.title}>Create event:</Text>
         <TextInput
-          onChangeText={this.onChangeText}
+          onChangeText={this.onChangeTextEvent}
           style={styles.nameInput}
           placeHolder="Where we droppin bois"
           value={this.state.event}
+        />
+        <TextInput
+          onChangeText={this.onChangeTextDateTime}
+          style={styles.nameInput}
+          placeHolder="When and where?"
+          value={this.state.date_time}
         />
         <TouchableOpacity onPress={this.onPress}>
           <Text style={styles.buttonText}>

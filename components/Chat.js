@@ -8,7 +8,8 @@ class Chat extends Component {
   });
 
   state = {
-    messages: []
+    messages: [],
+    user: ""
   };
 
   // get user() {
@@ -21,6 +22,37 @@ class Chat extends Component {
   //   };
   // }
 
+  componentWillMount() {
+    this.setState({
+      messages: [
+        {
+          _id: 1,
+          text: "Hello developer",
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: "React Native",
+            avatar: "https://placeimg.com/140/140/any"
+          }
+        }
+      ]
+    });
+  }
+
+  async componentDidMountUser() {
+    const user = await this.loadUserData();
+    this.setState({
+      user
+    });
+  }
+
+  loadUserData = async () => {
+    const url = "http://10.150.41.110:3000/v1/the/:user_id?";
+    const response = await fetch(url);
+    const data = response.json();
+    return data;
+  };
+
   async componentWillMount() {
     const messages = await this.loadData();
     this.setState({
@@ -29,7 +61,7 @@ class Chat extends Component {
   }
 
   loadData = async () => {
-    const url = "http://10.150.41.110:3000/post/:post_id?";
+    const url = "http://10.150.41.110:3000/v1/post/:post_id?";
     const response = await fetch(url);
     const data = response.json();
     return data;

@@ -15,8 +15,13 @@ class Feed extends Component {
   };
 
   // takes us to the Chat screen
-  onPress = () => {
-    this.props.navigation.navigate("Chat", { name: this.state.name });
+  onPressChat = () => {
+    this.props.navigation.navigate("Chat", { name: this.state.group_name });
+  };
+
+  // takes us to the create screen
+  onPressCreate = () => {
+    this.props.navigation.navigate("Create", { name: this.state.group_name });
   };
 
   async componentDidMount() {
@@ -26,8 +31,9 @@ class Feed extends Component {
     });
   }
 
+  // this loads the list of events
   loadData = async () => {
-    const url = "http://10.150.41.110:3000/v1/post/:post_id?";
+    const url = "http://10.150.11.211:3000/v1/groups";
     const response = await fetch(url);
     const data = response.json();
     return data;
@@ -38,16 +44,21 @@ class Feed extends Component {
     console.log(events);
     return (
       <View>
-        <Text style={styles.title}>You down?</Text>
+        <Text style={styles.title}>You down for...</Text>
         <ScrollView>
-          <TouchableOpacity onPress={this.onPress}>
-            {this.state.events.map((events, index) => (
-              <View key={events.id}>
-                <Text style={styles.contentContainer}>{events.texts}</Text>
-              </View>
-            ))}
-          </TouchableOpacity>
+          {this.state.events.map((events, index) => (
+            <View key={events.group_name}>
+              <Text style={styles.contentContainer} onPress={this.onPressChat}>
+                {events.group_name}
+              </Text>
+            </View>
+          ))}
         </ScrollView>
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={this.onPressCreate}>
+            <Text style={styles.newEvent}>Create an event</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -56,21 +67,35 @@ class Feed extends Component {
 const offset = 24;
 const styles = StyleSheet.create({
   title: {
-    marginTop: offset,
-    marginLeft: offset,
+    alignContent: "center",
     fontSize: offset,
     borderColor: "red",
-    borderWidth: 2
+    borderWidth: 2,
+    justifyContent: "center"
   },
   contentContainer: {
-    paddingVertical: 10
-  },
-  buttonText: {
-    marginLeft: offset,
     fontSize: offset,
+    borderColor: "green",
+    color: "red",
+    borderWidth: 2,
+    marginBottom: 6,
+    marginTop: 6,
+    marginLeft: 6,
+    marginRight: 6,
+    justifyContent: "center"
+  },
+  newEvent: {
+    fontSize: offset,
+    justifyContent: "center",
+    alignItems: "center",
     borderColor: "blue",
     borderWidth: 2
   }
+  // footer: {
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   height: 50
+  // }
 });
 
 export default Feed;
